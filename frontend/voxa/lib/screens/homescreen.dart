@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
+// HomeScreen widget with TabBar and AppBar
+class HomeScreen extends StatefulWidget { 
   const HomeScreen({super.key});
 
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
+// State class for HomeScreen
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
