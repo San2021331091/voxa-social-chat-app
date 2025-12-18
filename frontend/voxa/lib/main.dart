@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/screens/homescreen.dart';
 
-void main() { //entry point of the application
+void main() { //entry point of the main application.
   runApp(const MyApp());
 }
 
