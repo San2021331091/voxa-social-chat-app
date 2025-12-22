@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voxa/pages/ChatPage.dart';
+import 'package:voxa/pages/chatpage.dart';
 
 // HomeScreen widget with TabBar and AppBar
 class HomeScreen extends StatefulWidget { 
@@ -30,6 +30,7 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
+      
         preferredSize: const Size.fromHeight(110),
         child: Container(
           decoration: const BoxDecoration(
