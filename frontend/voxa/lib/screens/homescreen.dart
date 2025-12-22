@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voxa/pages/ChatPage.dart';
 
 // HomeScreen widget with TabBar and AppBar
 class HomeScreen extends StatefulWidget { 
@@ -11,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 // State class for HomeScreen
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  late TabController tabController;
+    late TabController tabController;
 
   @override
   void initState() {
@@ -34,8 +35,8 @@ class HomeScreenState extends State<HomeScreen>
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF8A2BE2), // violet
-                Color(0xFF1E90FF), // blue
+                   Color(0xFF075E54), // deep teal green
+                   Color(0xFF25D366), // modern light green
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -61,10 +62,24 @@ class HomeScreenState extends State<HomeScreen>
                         icon: const Icon(Icons.search, color: Colors.white),
                         onPressed: () {},
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert, color: Colors.white),
-                        onPressed: () {},
-                      ),
+                      PopupMenuButton<String>(
+                        
+                        onSelected: (value) => print(value)
+                        
+                        ,itemBuilder: (BuildContext context) => [
+
+                       PopupMenuItem(value: "New Group",child: const Text("New Group")),
+                       
+                       PopupMenuItem(value: "New Broadcast",child: const Text("New Broadcast")),
+                       
+                       PopupMenuItem(value: "Voxa Web",child: const Text("Voxa Web")),
+                       
+                       PopupMenuItem(value: "Starred Messages",child: const Text("Starred Messages")),
+                       
+                       PopupMenuItem(value: "Settings",child: const Text("Settings")),
+
+                      ])
+
                     ],
                   ),
                 ),
@@ -83,9 +98,20 @@ class HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ],
+            
             ),
+            
           ),
         ),
+      ),
+      body: TabBarView(
+        controller: tabController,
+        children:  [
+          Center(child: Text("Camera Screen")),
+          ChatPage(),
+          Center(child: Text("Status Screen")),
+          Center(child: Text("Calls Screen")),
+        ],
       ),
     );
   }
