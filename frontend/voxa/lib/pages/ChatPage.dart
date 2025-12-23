@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voxa/customui/customcard.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -31,6 +32,12 @@ class ChatPageState extends State<ChatPage> {
           elevation: 0,
           child: const Icon(Icons.chat, color: Colors.white),
         ),
+      ),
+      body: ListView(
+        children: [
+          CustomCard(),
+          CustomCard(),
+        ],
       ),
     );
   }
