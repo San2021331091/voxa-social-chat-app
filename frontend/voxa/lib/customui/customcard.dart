@@ -37,6 +37,7 @@ class CustomCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
+                  color: Colors.deepOrange
                 ),
               ),
               subtitle: Row(

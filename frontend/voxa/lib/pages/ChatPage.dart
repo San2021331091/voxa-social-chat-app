@@ -58,8 +58,8 @@ class ChatPageState extends State<ChatPage> {
           shape: BoxShape.circle,
           gradient: LinearGradient(
             colors: [
-              Colors.green,
-              Colors.blue,
+               Color.fromARGB(255, 11, 187, 17),
+              Color.fromARGB(255, 16, 134, 230),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
