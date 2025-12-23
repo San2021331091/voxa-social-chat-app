@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/pages/chatpage.dart';
+import 'package:voxa/colors/colors.dart';
 
 // HomeScreen widget with TabBar and AppBar
 class HomeScreen extends StatefulWidget { 
@@ -36,8 +37,8 @@ class HomeScreenState extends State<HomeScreen>
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                   Color(0xFF075E54), // deep teal green
-                   Color(0xFF25D366), // modern light green
+                   AppColor.tealGreen, // deep teal green
+                   AppColor.lightGreen, // modern light green
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -65,19 +66,18 @@ class HomeScreenState extends State<HomeScreen>
                       ),
                       PopupMenuButton<String>(
                         
-                        onSelected: (value) => print(value)
+                        color: AppColor.tealGreen
                         
                         ,itemBuilder: (BuildContext context) => [
 
-                       PopupMenuItem(value: "New Group",child: const Text("New Group")),
+                       PopupMenuItem(value: "New Group",child: const Text("New Group",style: TextStyle(color: Colors.white),)),
                        
-                       PopupMenuItem(value: "New Broadcast",child: const Text("New Broadcast")),
+                       PopupMenuItem(value: "New Broadcast",child: const Text("New Broadcast",style: TextStyle(color: Colors.white),)),
                        
-                       PopupMenuItem(value: "Voxa Web",child: const Text("Voxa Web")),
+                       PopupMenuItem(value: "Voxa Web",child: const Text("Voxa Web",style: TextStyle(color: Colors.white),)),
+                       PopupMenuItem(value: "Starred Messages",child: const Text("Starred Messages",style: TextStyle(color: Colors.white),)),
                        
-                       PopupMenuItem(value: "Starred Messages",child: const Text("Starred Messages")),
-                       
-                       PopupMenuItem(value: "Settings",child: const Text("Settings")),
+                       PopupMenuItem(value: "Settings",child: const Text("Settings",style: TextStyle(color: Colors.white),)),
 
                       ])
 
