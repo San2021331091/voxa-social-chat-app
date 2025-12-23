@@ -1,65 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/screens/individualpage.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key});
+  const CustomCard({super.key, required this.chatModel});
+
+  final ChatModel chatModel;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const  IndividualPage()));
       },
       child: Column(
-      children: [
-        /// Tile padding like WhatsApp
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            leading: CircleAvatar(
-              radius: 26,
-              backgroundColor: Colors.lightBlue,
-              child: SvgPicture.asset(
-                "assets/groups.svg",
-                height: 34,
-                width: 34,
-              ),
-            ),
-            title: const Text(
-              "John Doe",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            subtitle: Row(
-              children: const [
-                Icon(Icons.done_all, size: 16, color: Colors.red),
-                SizedBox(width: 4),
-                Text(
-                  "Hello! How are you?",
-                  style: TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.w700),
+        children: [
+          /// Tile padding like WhatsApp
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+              leading: CircleAvatar(
+                radius: 26,
+                backgroundColor: Colors.lightBlue,
+                child: SvgPicture.asset(
+                  chatModel.isGroup
+                      ? "assets/groups.svg"
+                      : "assets/persons.svg",
+                  height: 34,
+                  width: 34,
                 ),
-              ],
-            ),
-            trailing: const Text(
-              "18:04",
-              style: TextStyle(fontSize: 12, color: Colors.blue,fontWeight: FontWeight.w600),
+              ),
+              title: Text(
+                chatModel.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              subtitle: Row(
+                children: [
+                  const Icon(Icons.done_all, size: 16, color: Colors.red),
+                  const SizedBox(width: 4),
+                  /// Wrap the text in Expanded to prevent overflow
+                  Expanded(
+                    child: Text(
+                      chatModel.currentMessage ?? "No messages yet",
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              trailing: Text(
+                chatModel.time,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
-        ),
 
-        /// 🔹 divider with padding
-        const Padding(
-          padding: EdgeInsets.only(left: 78, right: 12),
-          child: Divider(
-            height: 0,
-            thickness: 0.6,
-            color: Colors.blueGrey,
+          /// 🔹 divider with padding
+          const Padding(
+            padding: EdgeInsets.only(left: 78, right: 12),
+            child: Divider(
+              height: 0,
+              thickness: 0.6,
+              color: Colors.blueGrey,
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }
