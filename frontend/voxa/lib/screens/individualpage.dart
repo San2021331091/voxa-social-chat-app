@@ -1,9 +1,12 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:marquee/marquee.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
-
+import 'package:flutter_contacts/flutter_contacts.dart';
 class IndividualPage extends StatefulWidget {
   const IndividualPage({super.key, required this.chatModel});
   final ChatModel chatModel;
@@ -143,46 +146,54 @@ void initState() {
               ],
             ),
           ),
-
-          // BODY - Chat area
-          Expanded(
-            child: Container(
-              color: Colors.blueAccent[100],
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                children: [
-                  // Sample messages
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text("Hello! How are you?"),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColor.tealGreen,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        "I'm fine, thanks!",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+// BODY - Chat area (Gradient Background)
+Expanded(
+  child: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          AppColor.lightGreen, // light green
+          AppColor.tealGreen,  // dark green
+        ],
+      ),
+    ),
+    child: ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.indigo,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text("Hello! How are you?", style: TextStyle(color: Colors.white)),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColor.tealGreen,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              "I'm fine, thanks!",
+              style: TextStyle(color: Colors.white),
             ),
           ),
+        ),
+      ],
+    ),
+  ),
+),
+
 
         
 Container(
@@ -206,7 +217,7 @@ Container(
                   Icons.emoji_emotions_outlined,
                   size: 26,
                   color: Colors.grey.shade700,
-                  weight: 700,
+                  weight: 900,
                 ),
                 onPressed: () {},
               ),
@@ -230,9 +241,15 @@ Container(
                   Icons.attach_file,
                   size: 26,
                   color: Colors.grey.shade700,
-                  weight: 700,
+                  weight:600,
                 ),
-                onPressed: () {},
+                onPressed: () {
+
+
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context, builder: (builder)=>bottomSheet());
+                },
               ),
 
               // Camera
@@ -243,7 +260,9 @@ Container(
                   color: Colors.grey.shade700,
                   weight: 700,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                 openCamera();
+                },
               ),
             ],
           ),
@@ -272,7 +291,7 @@ Container(
           _messageController.clear(); // auto switches back to mic
         }
       } else {
-        // MIC ACTION
+        // MIC ACTION   
         print("Start recording");
       }
     },
@@ -287,4 +306,226 @@ Container(
       ),
     );
   }
+
+Widget bottomSheet() {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+    height: 300,
+    padding: const EdgeInsets.all(16),
+    decoration: const BoxDecoration(
+      color: AppColor.tealGreen,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _attachmentItem(
+              icon: Icons.insert_drive_file,
+              label: "Document",
+              color: Colors.indigo,
+              onTap: () {
+                Navigator.pop(context);
+                pickDocument();
+              },
+            ),
+            _attachmentItem(
+              icon: Icons.camera_alt,
+              label: "Camera",
+              color: Colors.pink,
+              onTap: () {
+                Navigator.pop(context);
+                openCamera();
+              },
+            ),
+            _attachmentItem(
+              icon: Icons.photo,
+              label: "Gallery",
+              color: Colors.purple,
+              onTap: () {
+                Navigator.pop(context);
+               pickImage();
+              },
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 30),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _attachmentItem(
+              icon: Icons.headphones,
+              label: "Audio",
+              color: Colors.orange,
+              onTap: () {
+                Navigator.pop(context);
+                pickAudio();
+              },
+            ),
+            _attachmentItem(
+              icon: Icons.location_on,
+              label: "Location",
+              color: Colors.green,
+              onTap: () {
+                Navigator.pop(context);
+               shareLocation();
+              },
+            ),
+            _attachmentItem(
+              icon: Icons.person,
+              label: "Contact",
+              color: Colors.blue,
+              onTap: () {
+                Navigator.pop(context);
+               openContactPicker();
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }
+Widget _attachmentItem({
+  required IconData icon,
+  required String label,
+  required Color color,
+  required VoidCallback onTap,
+}) {
+  return InkWell(
+    onTap: onTap,
+    child: Column(
+      children: [
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: color,
+          child: Icon(icon, color: Colors.white, size: 28),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, color: Colors.white),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<void> pickDocument() async {
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['pdf', 'doc', 'docx', 'zip'],
+  );
+
+  if (result != null) {
+    final file = result.files.single;
+    print("Document picked: ${file.name}");
+  }
+}
+
+final ImagePicker _imagePicker = ImagePicker();
+
+Future<void> pickImage() async {
+  final XFile? image =
+      await _imagePicker.pickImage(source: ImageSource.gallery);
+
+  if (image != null) {
+    print("Image picked: ${image.path}");
+  }
+}
+
+Future<void> openCamera() async {
+  final XFile? photo =
+      await _imagePicker.pickImage(source: ImageSource.camera);
+
+  if (photo != null) {
+    print("Photo captured: ${photo.path}");
+  }
+}
+
+Future<void> pickAudio() async {
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.audio,
+  );
+
+  if (result != null) {
+    print("Audio picked: ${result.files.single.name}");
+  }
+}
+
+Future<void> shareLocation() async {
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) return;
+
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+  }
+
+  if (permission == LocationPermission.deniedForever) return;
+
+  final position = await Geolocator.getCurrentPosition();
+  print("Location: ${position.latitude}, ${position.longitude}");
+}
+
+
+
+Future<void> openContactPicker() async {
+  if (!await FlutterContacts.requestPermission()) return;
+
+  final contacts = await FlutterContacts.getContacts(
+    withProperties: true,
+    withPhoto: true,
+  );
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) {
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: ListView.builder(
+          itemCount: contacts.length,
+          itemBuilder: (_, index) {
+            final c = contacts[index];
+            return ListTile(
+              leading: CircleAvatar(
+                child: Text(
+                  c.displayName.isNotEmpty
+                      ? c.displayName[0]
+                      : "?",
+                ),
+              ),
+              title: Text(c.displayName),
+              subtitle: Text(
+                c.phones.isNotEmpty
+                    ? c.phones.first.number
+                    : "No number",
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                print("Selected: ${c.displayName}");
+              },
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
+
+
+
+
+}  
+
+
+
+
