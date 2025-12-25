@@ -3,7 +3,7 @@ import 'package:voxa/pages/chatpage.dart';
 import 'package:voxa/colors/colors.dart';
 
 // HomeScreen widget with TabBar and AppBar
-class HomeScreen extends StatefulWidget { 
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 // State class for HomeScreen
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-    late TabController tabController;
+  late TabController tabController;
 
   @override
   void initState() {
@@ -31,14 +31,13 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-      
         preferredSize: const Size.fromHeight(110),
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                   AppColor.tealGreen, // deep teal green
-                   AppColor.lightGreen, // modern light green
+                AppColor.tealGreen, // deep teal green
+                AppColor.lightGreen, // modern light green
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -65,22 +64,49 @@ class HomeScreenState extends State<HomeScreen>
                         onPressed: () {},
                       ),
                       PopupMenuButton<String>(
-                        
-                        color: AppColor.tealGreen
-                        
-                        ,itemBuilder: (BuildContext context) => [
+                        color: AppColor.tealGreen,
+                        icon: const Icon(Icons.more_vert, color: Colors.white),
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem(
+                            value: "New Group",
+                            child: const Text(
+                              "New Group",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
 
-                       PopupMenuItem(value: "New Group",child: const Text("New Group",style: TextStyle(color: Colors.white),)),
-                       
-                       PopupMenuItem(value: "New Broadcast",child: const Text("New Broadcast",style: TextStyle(color: Colors.white),)),
-                       
-                       PopupMenuItem(value: "Voxa Web",child: const Text("Voxa Web",style: TextStyle(color: Colors.white),)),
-                       PopupMenuItem(value: "Starred Messages",child: const Text("Starred Messages",style: TextStyle(color: Colors.white),)),
-                       
-                       PopupMenuItem(value: "Settings",child: const Text("Settings",style: TextStyle(color: Colors.white),)),
+                          PopupMenuItem(
+                            value: "New Broadcast",
+                            child: const Text(
+                              "New Broadcast",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
 
-                      ])
+                          PopupMenuItem(
+                            value: "Voxa Web",
+                            child: const Text(
+                              "Voxa Web",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "Starred Messages",
+                            child: const Text(
+                              "Starred Messages",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
 
+                          PopupMenuItem(
+                            value: "Settings",
+                            child: const Text(
+                              "Settings",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -99,15 +125,13 @@ class HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ],
-            
             ),
-            
           ),
         ),
       ),
       body: TabBarView(
         controller: tabController,
-        children:  [
+        children: [
           Center(child: Text("Camera Screen")),
           ChatPage(),
           Center(child: Text("Status Screen")),

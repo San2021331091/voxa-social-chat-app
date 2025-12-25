@@ -30,7 +30,7 @@ class CustomCard extends StatelessWidget {
                 radius: 26,
                 backgroundColor: Colors.lightBlue,
                 child: SvgPicture.asset(
-                  chatModel.isGroup
+                  chatModel.isGroup!
                       ? "assets/groups.svg"
                       : "assets/persons.svg",
                   height: 34,
@@ -38,7 +38,7 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               title: Text(
-                chatModel.name,
+                chatModel.name!,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
@@ -65,7 +65,7 @@ class CustomCard extends StatelessWidget {
                 ],
               ),
               trailing: Text(
-                chatModel.time,
+                chatModel.time!,
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.blue,

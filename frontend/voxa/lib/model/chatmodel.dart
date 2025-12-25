@@ -1,13 +1,9 @@
 class ChatModel {
-  final String name;
-  final bool isGroup;
+  final String? name;
+  final bool? isGroup;
+  final String ? about;
   final String? currentMessage;
-  final String time;
+  final String? time;
 
-  const ChatModel({
-    required this.name,
-    required this.isGroup,
-    this.currentMessage,
-    required this.time,
-  });
+  const ChatModel({this.name, this.isGroup, this.about, this.currentMessage, this.time});
 }

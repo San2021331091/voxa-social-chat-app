@@ -62,7 +62,7 @@ class _IndividualPageState extends State<IndividualPage> {
                   radius: 20,
                   backgroundColor: Colors.blueGrey,
                   child: SvgPicture.asset(
-                    widget.chatModel.isGroup
+                    widget.chatModel.isGroup!
                         ? "assets/groups.svg"
                         : "assets/persons.svg",
                     height: 34,
@@ -76,7 +76,7 @@ class _IndividualPageState extends State<IndividualPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.chatModel.name,
+                        widget.chatModel.name!,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18.5,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
+import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/pages/AddNewGroup.dart';
 
 class CreateGroup extends StatefulWidget {
   const CreateGroup({super.key});
@@ -9,16 +11,14 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
-  final List<Map<String, String>> contacts = [
-    {"name": "Balram", "about": "Flutter Developer"},
-    {"name": "Saket", "about": "Web developer"},
-    {"name": "Bhanu Dev", "about": "App developer"},
-    {"name": "Collins", "about": "React developer"},
-    {"name": "Kishor", "about": "Full Stack Web"},
-    {"name": "Testing1", "about": "Example work"},
-    {"name": "Testing2", "about": "Sharing is caring"},
-    {"name": "Divyanshu", "about": ""},
-    {"name": "Helper", "about": "Love you Mom Dad"},
+  final List<ChatModel> contacts = const [
+    ChatModel(name: "Balram", about: "Flutter Developer"),
+    ChatModel(name: "Saket", about: "Web developer"),
+    ChatModel(name: "Bhanu Dev", about: "App developer"),
+    ChatModel(name: "Collins", about: "React developer"),
+    ChatModel(name: "Kishor", about: "Full Stack Web"),
+    ChatModel(name: "Divyanshu", about: "Love to code"),
+    ChatModel(name: "Helper", about: "Love you Mom Dad"),
   ];
 
   final Set<String> selectedUsers = {};
@@ -72,7 +72,10 @@ class _CreateGroupState extends State<CreateGroup> {
           ? FloatingActionButton(
               backgroundColor: AppColor.lightGreen,
               onPressed: () {
-                // Next screen (Group name page)
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => const AddNewGroup()),
+              );
               },
               child: const Icon(Icons.arrow_forward, color: Colors.white),
             )
@@ -103,7 +106,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   children: [
                     const CircleAvatar(
                       radius: 24,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blue,
                       child: Icon(Icons.person, color: Colors.white),
                     ),
                     Positioned(
@@ -115,7 +118,7 @@ class _CreateGroupState extends State<CreateGroup> {
                         },
                         child: const CircleAvatar(
                           radius: 10,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: Colors.red,
                           child: Icon(
                             Icons.close,
                             size: 14,
@@ -129,7 +132,11 @@ class _CreateGroupState extends State<CreateGroup> {
                 const SizedBox(height: 4),
                 Text(
                   name,
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.w800,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -146,13 +153,14 @@ class _CreateGroupState extends State<CreateGroup> {
       itemCount: contacts.length,
       itemBuilder: (context, index) {
         final contact = contacts[index];
-        final isSelected = selectedUsers.contains(contact["name"]);
+        final name = contact.name ?? "";
+        final isSelected = selectedUsers.contains(name);
 
         return ListTile(
           leading: Stack(
             children: [
               const CircleAvatar(
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.blue,
                 child: Icon(Icons.person, color: Colors.white),
               ),
               if (isSelected)
@@ -168,15 +176,23 @@ class _CreateGroupState extends State<CreateGroup> {
             ],
           ),
           title: Text(
-            contact["name"]!,
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            name,
+            style: const TextStyle(
+              color: Colors.deepOrange,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          subtitle: Text(contact["about"] ?? ""),
+          subtitle: Text(
+            contact.about ?? "",
+            style: const TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
           onTap: () {
             setState(() {
-              isSelected
-                  ? selectedUsers.remove(contact["name"])
-                  : selectedUsers.add(contact["name"]!);
+              isSelected ? selectedUsers.remove(name) : selectedUsers.add(name);
             });
           },
         );

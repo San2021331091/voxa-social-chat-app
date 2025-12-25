@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
+import 'package:voxa/model/chatmodel.dart';
 import 'package:voxa/screens/creategroup.dart';
 
 class SelectContact extends StatefulWidget {
@@ -10,11 +11,11 @@ class SelectContact extends StatefulWidget {
 }
 
 class _SelectContactState extends State<SelectContact> {
-  final List<Map<String, String>> contacts = [
-    {"name": "Dev Stack", "subtitle": "Hi Everyone"},
-    {"name": "Kishor Kumar", "subtitle": "Hi Kishor"},
-    {"name": "Dev Server Chat", "subtitle": "Hi Everyone on this group"},
-    {"name": "Collins", "subtitle": "Hi Dev Stack"},
+  final List<ChatModel> contacts = const [
+    ChatModel(name: "Dev Stack", about: "Hi Everyone"),
+    ChatModel(name: "Kishor Kumar", about: "Hi Kishor"),
+    ChatModel(name: "Dev Server Chat", about: "Hi Everyone on this group"),
+    ChatModel(name: "Collins", about: "Hi Dev Stack"),
   ];
 
   @override
@@ -103,20 +104,26 @@ class _SelectContactState extends State<SelectContact> {
 
       body: ListView(
         children: [
-          _topTile(icon: Icons.group, title: "New group", onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const CreateGroup(),
+          _topTile(
+            icon: Icons.group,
+            title: "New group",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => const CreateGroup()),
+              );
+            },
           ),
-        );
-      },),
-          _topTile(icon: Icons.person_add, title: "New contact",onTap: (){}),
-          _topTile(icon: Icons.group_add_sharp, title: "New Community",onTap: (){}),
+          _topTile(icon: Icons.person_add, title: "New contact", onTap: () {}),
+          _topTile(
+            icon: Icons.group_add_sharp,
+            title: "New Community",
+            onTap: () {},
+          ),
           const Divider(),
 
           ...contacts.map(
-            (c) => _contactTile(name: c["name"]!, subtitle: c["subtitle"]!),
+            (c) => _contactTile(name: c.name ?? "", subtitle: c.about ?? ""),
           ),
         ],
       ),
