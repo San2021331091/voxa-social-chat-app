@@ -12,7 +12,12 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  IndividualPage(chatModel: chatModel )));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IndividualPage(chatModel: chatModel),
+          ),
+        );
       },
       child: Column(
         children: [
@@ -37,13 +42,14 @@ class CustomCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
-                  color: Colors.deepOrange
+                  color: Colors.deepOrange,
                 ),
               ),
               subtitle: Row(
                 children: [
                   const Icon(Icons.done_all, size: 16, color: Colors.red),
                   const SizedBox(width: 4),
+
                   /// Wrap the text in Expanded to prevent overflow
                   Expanded(
                     child: Text(
@@ -72,11 +78,7 @@ class CustomCard extends StatelessWidget {
           /// 🔹 divider with padding
           const Padding(
             padding: EdgeInsets.only(left: 78, right: 12),
-            child: Divider(
-              height: 0,
-              thickness: 0.6,
-              color: Colors.blueGrey,
-            ),
+            child: Divider(height: 0, thickness: 0.6, color: Colors.blueGrey),
           ),
         ],
       ),

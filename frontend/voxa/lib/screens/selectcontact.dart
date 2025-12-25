@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
-
+import 'package:voxa/screens/creategroup.dart';
 
 class SelectContact extends StatefulWidget {
   const SelectContact({super.key});
@@ -22,31 +22,78 @@ class _SelectContactState extends State<SelectContact> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        leading: const BackButton(),
+        leading: const BackButton(color: Colors.white),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Select contact", style: TextStyle(fontSize: 18,color:Colors.white)),
+            Text(
+              "Select contact",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
             SizedBox(height: 2),
             Text(
               "267 contacts",
-              style: TextStyle(fontSize: 12, color: Colors.white70,fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
-        actions: const [
-          Icon(Icons.search, color: Colors.white),
-          SizedBox(width: 12),
-          Icon(Icons.more_vert, color: Colors.white),
-          SizedBox(width: 8),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            color: Colors.white,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 12),
+          PopupMenuButton<String>(
+            color: AppColor.tealGreen,
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onSelected: (value) {
+              switch (value) {
+                case 'invite':
+                  print('Invite a friend');
+                  break;
+                case 'contacts':
+                  print('Contacts');
+                  break;
+                case 'refresh':
+                  print('Refresh');
+                  break;
+                case 'help':
+                  print('Help');
+                  break;
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'invite',
+                child: Text(
+                  'Invite a friend',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'contacts',
+                child: Text('Contacts', style: TextStyle(color: Colors.white)),
+              ),
+              PopupMenuItem(
+                value: 'refresh',
+                child: Text('Refresh', style: TextStyle(color: Colors.white)),
+              ),
+              PopupMenuItem(
+                value: 'help',
+                child: Text('Help', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
         ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                AppColor.tealGreen,
-                AppColor.lightGreen,
-              ],
+              colors: [AppColor.tealGreen, AppColor.lightGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -56,34 +103,45 @@ class _SelectContactState extends State<SelectContact> {
 
       body: ListView(
         children: [
-          _topTile(
-            icon: Icons.group,
-            title: "New group",
+          _topTile(icon: Icons.group, title: "New group", onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const CreateGroup(),
           ),
-          _topTile(
-            icon: Icons.person_add,
-            title: "New contact",
-          ),
+        );
+      },),
+          _topTile(icon: Icons.person_add, title: "New contact",onTap: (){}),
+          _topTile(icon: Icons.group_add_sharp, title: "New Community",onTap: (){}),
           const Divider(),
 
-          ...contacts.map((c) => _contactTile(
-                name: c["name"]!,
-                subtitle: c["subtitle"]!,
-              )),
+          ...contacts.map(
+            (c) => _contactTile(name: c["name"]!, subtitle: c["subtitle"]!),
+          ),
         ],
       ),
     );
   }
 
-  Widget _topTile({required IconData icon, required String title}) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppColor.lightGreen,
-        child: Icon(icon, color: Colors.white),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.red),
+  Widget _topTile({
+    required IconData icon,
+    required String title,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: AppColor.lightGreen,
+          child: Icon(icon, color: Colors.white),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.red,
+          ),
+        ),
       ),
     );
   }
@@ -96,13 +154,19 @@ class _SelectContactState extends State<SelectContact> {
       ),
       title: Text(
         name,
-        style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.deepOrange),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.deepOrange,
+        ),
       ),
       subtitle: Text(
         subtitle,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color:Colors.green,fontWeight: FontWeight.w800),
+        style: const TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
