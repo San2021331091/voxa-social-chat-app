@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voxa/pages/camerapage.dart';
 import 'package:voxa/pages/chatpage.dart';
 import 'package:voxa/colors/colors.dart';
 
@@ -132,8 +133,8 @@ class HomeScreenState extends State<HomeScreen>
       body: TabBarView(
         controller: tabController,
         children: [
-          Center(child: Text("Camera Screen")),
-          ChatPage(),
+          const CameraPage(),
+          const ChatPage(),
           Center(child: Text("Status Screen")),
           Center(child: Text("Calls Screen")),
         ],

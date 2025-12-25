@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:voxa/model/chatmodel.dart';
-import 'package:voxa/screens/individualpage.dart';
+import 'package:voxa/pages/individualpage.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({super.key, required this.chatModel});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
-import 'package:voxa/pages/AddNewGroup.dart';
+import 'package:voxa/screens/AddNewGroup.dart';
 
 class CreateGroup extends StatefulWidget {
   const CreateGroup({super.key});
