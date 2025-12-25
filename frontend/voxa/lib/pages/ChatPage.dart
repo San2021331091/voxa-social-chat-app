@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/customui/customcard.dart';
 import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/screens/selectcontact.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -40,12 +41,7 @@ class ChatPageState extends State<ChatPage> {
         name: "Rasel",
         isGroup: false,
         currentMessage: "Hey.",
-        time: "7:09 AM"),
-
-      
-
-  
-        
+        time: "7:09 AM"),        
 
   ];
   @override
@@ -66,7 +62,11 @@ class ChatPageState extends State<ChatPage> {
           ),
         ),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const SelectContact()));
+          },
           backgroundColor: Colors.transparent,
           elevation: 0,
           child: const Icon(Icons.chat, color: Colors.white),

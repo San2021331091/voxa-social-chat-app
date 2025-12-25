@@ -1,4 +1,6 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,6 +20,9 @@ class IndividualPage extends StatefulWidget {
 class _IndividualPageState extends State<IndividualPage> {
   final TextEditingController _messageController = TextEditingController();
   bool isTyping = false;
+  final FocusNode _focusNode = FocusNode();
+  bool showEmojiPicker = false;
+
  
 @override
 void initState() {
@@ -219,19 +224,32 @@ Container(
                   color: Colors.grey.shade700,
                   weight: 900,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                     FocusScope.of(context).unfocus(); // hide keyboard
+                    setState(() {
+                   showEmojiPicker = !showEmojiPicker;
+                    });
+                },
               ),
 
               // TextField
               Expanded(
                 child: TextField(
                   controller: _messageController,
+                  focusNode: _focusNode,
                   maxLines: 5,
                   minLines: 1,
                   decoration: const InputDecoration(
                     hintText: "Message",
                     border: InputBorder.none,
                   ),
+                 onTap: () {
+                  if (showEmojiPicker) {
+                    setState(() {
+                    showEmojiPicker = false;
+      });
+    }
+  },
                 ),
               ),
 
@@ -299,6 +317,39 @@ Container(
 ),
 
     ],
+  ),
+
+  
+),
+
+
+Offstage(
+  offstage: !showEmojiPicker,
+  child: SizedBox(
+    height: 256, // fixed height solves unbounded constraint
+    child: EmojiPicker(
+      textEditingController: _messageController,
+      onEmojiSelected: (category, emoji) {},
+      onBackspacePressed: () {
+        _messageController.text = _messageController.text.characters.skipLast(1).toString();
+        _messageController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _messageController.text.length),
+        );
+      },
+      config: Config(
+       
+        checkPlatformCompatibility: true,
+        emojiViewConfig: EmojiViewConfig(
+          emojiSizeMax: 28 *
+              (foundation.defaultTargetPlatform == TargetPlatform.android ? 1.0 : 1.2),
+        ),
+        viewOrderConfig: const ViewOrderConfig(
+          top: EmojiPickerItem.categoryBar,
+          middle: EmojiPickerItem.emojiView,
+          bottom: EmojiPickerItem.searchBar,
+        ),
+      ),
+    ),
   ),
 ),
 
@@ -451,7 +502,7 @@ Future<void> openCamera() async {
 
 Future<void> pickAudio() async {
   final result = await FilePicker.platform.pickFiles(
-    type: FileType.audio,
+    type: FileType.audio, 
   );
 
   if (result != null) {
@@ -510,7 +561,7 @@ Future<void> openContactPicker() async {
               ),
               onTap: () {
                 Navigator.pop(context);
-                print("Selected: ${c.displayName}");
+                print("Selected: ${c.displayName} - ${c.phones.isNotEmpty ? c.phones.first.number : 'No number'}");
               },
             );
           },
