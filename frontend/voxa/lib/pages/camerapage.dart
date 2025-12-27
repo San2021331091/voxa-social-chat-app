@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:voxa/pages/camerarecordpage.dart';
+
 
 enum CameraMode { photo, video }
 
@@ -46,16 +48,20 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   /// -------- GALLERY --------
-  Future<void> _pickFromGallery() async {
-    final XFile? image =
-        await _picker.pickImage(source: ImageSource.gallery);
+Future<void> _pickFromGallery() async {
+  final XFile? image =
+      await _picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      Future.microtask(() {
-        if (mounted) Navigator.pop(context, File(image.path));
-      });
-    }
-  }
+  if (image == null || !mounted) return;
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => CameraRecordPage(file: File(image.path)),
+    ),
+  );
+}
+
 
   /// -------- CAMERA CONTROLS --------
   Future<void> _switchCamera() async {
@@ -65,8 +71,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Future<void> _toggleFlash() async {
-    flashMode =
-        flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
+    flashMode = flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
     await _controller?.setFlashMode(flashMode);
     setState(() {});
   }
@@ -74,9 +79,13 @@ class _CameraPageState extends State<CameraPage> {
   /// -------- PHOTO --------
   Future<void> _capturePhoto() async {
     final XFile file = await _controller!.takePicture();
-    Future.microtask(() {
-      if (mounted) Navigator.pop(context, File(file.path));
-    });
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => CameraRecordPage(file: File(file.path))),
+    );
   }
 
   /// -------- VIDEO --------
@@ -103,16 +112,24 @@ class _CameraPageState extends State<CameraPage> {
     setState(() {});
   }
 
-  Future<void> _stopVideo() async {
-    _timer?.cancel();
-    final XFile file = await _controller!.stopVideoRecording();
-    isRecording = false;
-    isPaused = false;
+Future<void> _stopVideo() async {
+  _timer?.cancel();
 
-    Future.microtask(() {
-      if (mounted) Navigator.pop(context, File(file.path));
-    });
-  }
+  final XFile file = await _controller!.stopVideoRecording();
+
+  isRecording = false;
+  isPaused = false;
+
+  if (!mounted) return;
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => CameraRecordPage(file: File(file.path)),
+    ),
+  );
+}
+
 
   void _startTimer() {
     _timer?.cancel();
@@ -159,9 +176,7 @@ class _CameraPageState extends State<CameraPage> {
               children: [
                 _circleButton(Icons.close, () => Navigator.pop(context)),
                 _circleButton(
-                  flashMode == FlashMode.off
-                      ? Icons.flash_off
-                      : Icons.flash_on,
+                  flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
                   _toggleFlash,
                 ),
               ],
@@ -214,9 +229,7 @@ class _CameraPageState extends State<CameraPage> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isRecording
-                                ? Colors.red
-                                : Colors.white,
+                            color: isRecording ? Colors.red : Colors.white,
                             width: 5,
                           ),
                         ),
@@ -249,8 +262,7 @@ class _CameraPageState extends State<CameraPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () =>
-                          setState(() => mode = CameraMode.video),
+                      onTap: () => setState(() => mode = CameraMode.video),
                       child: Text(
                         "Video",
                         style: TextStyle(
@@ -263,8 +275,7 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                     const SizedBox(width: 20),
                     InkWell(
-                      onTap: () =>
-                          setState(() => mode = CameraMode.photo),
+                      onTap: () => setState(() => mode = CameraMode.photo),
                       child: Text(
                         "Photo",
                         style: TextStyle(
