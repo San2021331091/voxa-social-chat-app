@@ -98,7 +98,7 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
       await _controller!.startVideoRecording();
       setState(() => _isRecording = true);
     } catch (e) {
-      debugPrint("Start video error: $e");
+      
     }
   }
 
@@ -128,7 +128,7 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
       );
     } catch (e) {
       setState(() => _isRecording = false);
-      debugPrint("Stop video error: $e");
+    
     }
   }
 
