@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:voxa/media/media_result.dart';
@@ -16,14 +17,15 @@ class CameraRecordPage extends StatefulWidget {
 
 class _CameraRecordPageState extends State<CameraRecordPage> {
   CameraController? _controller;
+
   bool _isRecording = false;
   bool _isBusy = false;
+  DateTime? _recordStartTime;
 
   @override
   void initState() {
     super.initState();
 
-    // If a file is provided, open it immediately
     if (widget.file != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _openFile(widget.file!);
@@ -33,41 +35,56 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
     }
   }
 
+  /// 🔥 CameraX-safe initialization
   Future<void> _initCamera() async {
     try {
       final cameras = await availableCameras();
-      if (cameras.isEmpty) return;
+
+      final backCamera = cameras.firstWhere(
+        (c) => c.lensDirection == CameraLensDirection.back,
+      );
 
       _controller = CameraController(
-        cameras.first,
-        ResolutionPreset.high,
+        backCamera,
+        ResolutionPreset.medium, // ✅ best for Samsung
         enableAudio: true,
+        imageFormatGroup: ImageFormatGroup.yuv420,
       );
+
       await _controller!.initialize();
+
       if (mounted) setState(() {});
     } catch (e) {
-      debugPrint("Camera initialization error: $e");
+      debugPrint('Camera init error: $e');
     }
   }
 
+  /// Open captured media
   void _openFile(File file) {
     final ext = file.path.split('.').last.toLowerCase();
+
     if (['mp4', 'mov', 'avi', 'mkv'].contains(ext)) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => VideoViewPage(path: file.path)),
+        MaterialPageRoute(
+          builder: (_) => VideoViewPage(path: file.path),
+        ),
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => CameraView(file: file)),
+        MaterialPageRoute(
+          builder: (_) => CameraView(file: file),
+        ),
       );
     }
   }
 
-  /// Take photo
+  /// 📸 Take photo
   Future<void> _takePhoto() async {
-    if (_isRecording || _isBusy || _controller == null) return;
+    if (_isRecording || _isBusy) return;
+    if (_controller == null || !_controller!.value.isInitialized) return;
+
     _isBusy = true;
 
     try {
@@ -86,49 +103,76 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
       }
     } catch (e) {
       _isBusy = false;
-      debugPrint("Photo capture error: $e");
+      debugPrint('Photo capture error: $e');
     }
   }
 
-  /// Start video recording
+  /// 🎥 Start video (CameraX debounce safe)
   Future<void> _startVideo(LongPressStartDetails _) async {
-    if (_isRecording || _isBusy || _controller == null) return;
+    if (_isRecording || _isBusy) return;
+    if (_controller == null || !_controller!.value.isInitialized) return;
+
+    _isBusy = true;
+
+    // ✅ Samsung / CameraX debounce
+    await Future.delayed(const Duration(milliseconds: 180));
 
     try {
       await _controller!.startVideoRecording();
-      setState(() => _isRecording = true);
+      _recordStartTime = DateTime.now();
+
+      setState(() {
+        _isRecording = true;
+        _isBusy = false;
+      });
     } catch (e) {
-      
+      _isBusy = false;
+      debugPrint('Start video error: $e');
     }
   }
 
-  /// Stop video recording
+  /// ⏹ Stop video (CameraX file flush safe)
   Future<void> _stopVideo(LongPressEndDetails _) async {
-    if (!_isRecording || _controller == null) return;
+    if (!_isRecording) return;
+    if (_controller == null) return;
+
+    // ✅ Ignore fake stop (<600ms)
+    if (_recordStartTime != null &&
+        DateTime.now()
+                .difference(_recordStartTime!)
+                .inMilliseconds <
+            600) {
+      return;
+    }
 
     try {
       final XFile file = await _controller!.stopVideoRecording();
       setState(() => _isRecording = false);
 
-      // Fix for Samsung debug mode: ensure file is fully written
-      await Future.delayed(const Duration(milliseconds: 200));
+      // ✅ CameraX file write completion
+      await Future.delayed(const Duration(milliseconds: 500));
 
-      // Navigate to video preview
+      final videoFile = File(file.path);
+      if (!videoFile.existsSync() || videoFile.lengthSync() == 0) return;
+
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => VideoViewPage(path: file.path),
+          builder: (_) => VideoViewPage(path: videoFile.path),
         ),
       );
 
-      // Return result to previous screen
       Navigator.pop(
         context,
-        MediaResult(file: File(file.path), isVideo: true, caption: ''),
+        MediaResult(
+          file: videoFile,
+          isVideo: true,
+          caption: '',
+        ),
       );
     } catch (e) {
       setState(() => _isRecording = false);
-    
+      debugPrint('Stop video error: $e');
     }
   }
 
@@ -140,8 +184,9 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Camera UI
-    if (_controller == null || !_controller!.value.isInitialized) {
+    if (_controller == null ||
+        !_controller!.value.isInitialized ||
+        _controller!.value.hasError) {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(child: CircularProgressIndicator()),
@@ -153,6 +198,8 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
       body: Stack(
         children: [
           CameraPreview(_controller!),
+
+          /// Capture button
           Positioned(
             bottom: 40,
             left: 0,
@@ -162,9 +209,13 @@ class _CameraRecordPageState extends State<CameraRecordPage> {
                 onTap: _takePhoto,
                 onLongPressStart: _startVideo,
                 onLongPressEnd: _stopVideo,
-                child: CircleAvatar(
-                  radius: 36,
-                  backgroundColor: _isRecording ? Colors.red : Colors.white,
+                child: Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _isRecording ? Colors.red : Colors.white,
+                  ),
                 ),
               ),
             ),

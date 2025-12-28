@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 
 class VideoViewPage extends StatefulWidget {
   final String path;
+
   const VideoViewPage({super.key, required this.path});
 
   @override
@@ -11,23 +12,31 @@ class VideoViewPage extends StatefulWidget {
 }
 
 class _VideoViewPageState extends State<VideoViewPage> {
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.file(File(widget.path))
-      ..initialize().then((_) {
-        _controller
-          ..setLooping(true)
-          ..play();
-        setState(() {});
-      });
+    _initVideo();
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      _controller = VideoPlayerController.file(File(widget.path));
+      await _controller!.initialize();
+      _controller!
+        ..setLooping(true)
+        ..play();
+
+      if (mounted) setState(() {});
+    } catch (e) {
+      debugPrint("Video init error: $e");
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -37,18 +46,18 @@ class _VideoViewPageState extends State<VideoViewPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(backgroundColor: Colors.black),
       body: Center(
-        child: !_controller.value.isInitialized
+        child: _controller == null || !_controller!.value.isInitialized
             ? const CircularProgressIndicator()
             : GestureDetector(
                 onTap: () {
-                  _controller.value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
+                  _controller!.value.isPlaying
+                      ? _controller!.pause()
+                      : _controller!.play();
                   setState(() {});
                 },
                 child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+                  aspectRatio: _controller!.value.aspectRatio,
+                  child: VideoPlayer(_controller!),
                 ),
               ),
       ),

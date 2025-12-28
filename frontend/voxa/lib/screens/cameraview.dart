@@ -217,7 +217,8 @@ class _CameraViewState extends State<CameraView> {
                     ),
                     FloatingActionButton(
                       backgroundColor: Colors.green,
-                      child: const Icon(Icons.check),
+                      
+                      child: const Icon(Icons.check,color: Colors.white,),
                       onPressed: () {
                         Navigator.pop(
                           context,
