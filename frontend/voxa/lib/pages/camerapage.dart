@@ -1,12 +1,11 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:voxa/pages/camerarecordpage.dart';
+import 'package:voxa/screens/capturephoto.dart';
 
 
-enum CameraMode { photo, video }
+
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -23,13 +22,6 @@ class _CameraPageState extends State<CameraPage> {
   FlashMode flashMode = FlashMode.off;
   final ImagePicker _picker = ImagePicker();
 
-  CameraMode mode = CameraMode.photo;
-  bool isRecording = false;
-  bool isPaused = false;
-
-  Timer? _timer;
-  int recordingSeconds = 0;
-
   @override
   void initState() {
     super.initState();
@@ -41,27 +33,26 @@ class _CameraPageState extends State<CameraPage> {
     _controller = CameraController(
       cameras![selectedCameraIndex],
       ResolutionPreset.high,
-      enableAudio: true,
+      enableAudio: false,
     );
     await _controller!.initialize();
     setState(() {});
   }
 
   /// -------- GALLERY --------
-Future<void> _pickFromGallery() async {
-  final XFile? image =
-      await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> _pickFromGallery() async {
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery);
 
-  if (image == null || !mounted) return;
+    if (image == null || !mounted) return;
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => CameraRecordPage(file: File(image.path)),
-    ),
-  );
-}
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CapturePhoto(file: File(image.path)),
+      ),
+    );
+  }
 
   /// -------- CAMERA CONTROLS --------
   Future<void> _switchCamera() async {
@@ -71,7 +62,9 @@ Future<void> _pickFromGallery() async {
   }
 
   Future<void> _toggleFlash() async {
-    flashMode = flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
+    flashMode = flashMode == FlashMode.off
+        ? FlashMode.torch
+        : FlashMode.off;
     await _controller?.setFlashMode(flashMode);
     setState(() {});
   }
@@ -84,69 +77,14 @@ Future<void> _pickFromGallery() async {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => CameraRecordPage(file: File(file.path))),
+      MaterialPageRoute(
+        builder: (_) => CapturePhoto(file: File(file.path)),
+      ),
     );
-  }
-
-  /// -------- VIDEO --------
-  Future<void> _startVideo() async {
-    await _controller!.startVideoRecording();
-    recordingSeconds = 0;
-    isRecording = true;
-    isPaused = false;
-    _startTimer();
-    setState(() {});
-  }
-
-  Future<void> _pauseVideo() async {
-    await _controller!.pauseVideoRecording();
-    _timer?.cancel();
-    isPaused = true;
-    setState(() {});
-  }
-
-  Future<void> _resumeVideo() async {
-    await _controller!.resumeVideoRecording();
-    _startTimer();
-    isPaused = false;
-    setState(() {});
-  }
-
-Future<void> _stopVideo() async {
-  _timer?.cancel();
-
-  final XFile file = await _controller!.stopVideoRecording();
-
-  isRecording = false;
-  isPaused = false;
-
-  if (!mounted) return;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => CameraRecordPage(file: File(file.path)),
-    ),
-  );
-}
-
-
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() => recordingSeconds++);
-    });
-  }
-
-  String _formatTime(int seconds) {
-    final m = (seconds ~/ 60).toString().padLeft(2, '0');
-    final s = (seconds % 60).toString().padLeft(2, '0');
-    return "$m:$s";
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
     _controller?.dispose();
     super.dispose();
   }
@@ -176,118 +114,43 @@ Future<void> _stopVideo() async {
               children: [
                 _circleButton(Icons.close, () => Navigator.pop(context)),
                 _circleButton(
-                  flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
+                  flashMode == FlashMode.off
+                      ? Icons.flash_off
+                      : Icons.flash_on,
                   _toggleFlash,
                 ),
               ],
             ),
           ),
 
-          /// TIMER
-          if (isRecording)
-            Positioned(
-              top: 100,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  _formatTime(recordingSeconds),
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
           /// BOTTOM CONTROLS
           Positioned(
             bottom: 40,
             left: 0,
             right: 0,
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _circleButton(Icons.photo, _pickFromGallery),
+                _circleButton(Icons.photo, _pickFromGallery),
 
-                    /// CAPTURE BUTTON
-                    InkWell(
-                      borderRadius: BorderRadius.circular(50),
-                      onTap: () {
-                        if (mode == CameraMode.photo) {
-                          _capturePhoto();
-                        } else {
-                          isRecording ? _stopVideo() : _startVideo();
-                        }
-                      },
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isRecording ? Colors.red : Colors.white,
-                            width: 5,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    _circleButton(Icons.cameraswitch, _switchCamera),
-                  ],
-                ),
-
-                const SizedBox(height: 10),
-
-                /// PAUSE / RESUME BUTTON (VIDEO ONLY)
-                if (mode == CameraMode.video && isRecording)
-                  InkWell(
-                    onTap: isPaused ? _resumeVideo : _pauseVideo,
-                    child: Text(
-                      isPaused ? "Resume" : "Pause",
-                      style: const TextStyle(
+                /// CAPTURE BUTTON
+                InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: _capturePhoto,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        width: 5,
                       ),
                     ),
                   ),
-
-                const SizedBox(height: 10),
-
-                /// MODE SWITCH
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () => setState(() => mode = CameraMode.video),
-                      child: Text(
-                        "Video",
-                        style: TextStyle(
-                          color: mode == CameraMode.video
-                              ? Colors.white
-                              : Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    InkWell(
-                      onTap: () => setState(() => mode = CameraMode.photo),
-                      child: Text(
-                        "Photo",
-                        style: TextStyle(
-                          color: mode == CameraMode.photo
-                              ? Colors.white
-                              : Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
+
+                _circleButton(Icons.cameraswitch, _switchCamera),
               ],
             ),
           ),

@@ -48,7 +48,7 @@ class _IndividualPageState extends State<IndividualPage> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [AppColor.tealGreen, AppColor.lightGreen],
+                colors: [AppColor.dartTealGreen, AppColor.lightGreen],
               ),
             ),
             child: Row(
@@ -115,7 +115,7 @@ class _IndividualPageState extends State<IndividualPage> {
                       icon: const Icon(Icons.call, color: Colors.white),
                     ),
                     PopupMenuButton<String>(
-                      color: AppColor.tealGreen,
+                      color: AppColor.dartTealGreen,
                       icon: const Icon(Icons.more_vert, color: Colors.white),
                       onSelected: (value) {},
                       itemBuilder: (BuildContext context) {
@@ -165,7 +165,7 @@ class _IndividualPageState extends State<IndividualPage> {
                   end: Alignment.bottomCenter,
                   colors: [
                     AppColor.lightGreen, // light green
-                    AppColor.tealGreen, // dark green
+                    AppColor.dartTealGreen, // dark green
                   ],
                 ),
               ),
@@ -196,7 +196,7 @@ class _IndividualPageState extends State<IndividualPage> {
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
-                        color: AppColor.tealGreen,
+                        color: AppColor.dartTealGreen,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -301,7 +301,7 @@ class _IndividualPageState extends State<IndividualPage> {
                 // Mic / Send button
                 CircleAvatar(
                   radius: 25,
-                  backgroundColor: AppColor.tealGreen,
+                  backgroundColor: AppColor.dartTealGreen,
                   child: IconButton(
                     icon: Icon(
                       isTyping ? Icons.send : Icons.mic,
@@ -374,7 +374,7 @@ class _IndividualPageState extends State<IndividualPage> {
       height: 300,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: AppColor.tealGreen,
+        color: AppColor.dartTealGreen,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),

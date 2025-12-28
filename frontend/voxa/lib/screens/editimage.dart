@@ -1,18 +1,19 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:voxa/media/media_result.dart';
 import 'package:voxa/emoji/emoji_data.dart';
 
-class CameraView extends StatefulWidget {
+class EditImage extends StatefulWidget {
   final File file;
-  const CameraView({super.key, required this.file});
+  const EditImage({super.key, required this.file});
 
   @override
-  State<CameraView> createState() => _CameraViewState();
+  State<EditImage> createState() => _EditImageState();
 }
 
-class _CameraViewState extends State<CameraView> {
+class _EditImageState extends State<EditImage> {
   double rotationAngle = 0.0;
   bool showEmojiPicker = false;
   bool showCropOverlay = false;
@@ -24,13 +25,12 @@ class _CameraViewState extends State<CameraView> {
 
   final double _captionBarHeight = 70;
   final double _emojiPickerHeight = 120;
-
   final TextEditingController _captionController = TextEditingController();
 
   void _rotateImage() => setState(() => rotationAngle += pi / 2);
 
-  void _addTextOverlay() async {
-    final controller = TextEditingController();
+  void _addTextOverlay({String text = ''}) async {
+    final controller = TextEditingController(text: text);
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -50,7 +50,7 @@ class _CameraViewState extends State<CameraView> {
               if (controller.text.isNotEmpty) {
                 texts.add(_TextInfo(
                   text: controller.text,
-                  offset: const Offset(80, 80),
+                  offset: Offset(80, 80),
                   color: textColor,
                   size: textSize,
                 ));
@@ -63,6 +63,41 @@ class _CameraViewState extends State<CameraView> {
       ),
     );
     setState(() {});
+  }
+
+  Future<File> _exportImage() async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final image = await decodeImageFromList(widget.file.readAsBytesSync());
+    canvas.drawImage(image, Offset.zero, Paint());
+
+    // Draw points
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+    for (int i = 0; i < points.length - 1; i++) {
+      if (points [i] != null && points[i + 1] != null) {
+        canvas.drawLine(points[i]!, points[i + 1]!, paint);
+      }
+    }
+
+    // Draw texts
+    for (var t in texts) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: t.text, style: TextStyle(color: t.color, fontSize: t.size)),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, t.offset);
+    }
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(image.width, image.height);
+    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
+    final newFile = File('${widget.file.path}_edited.png');
+    await newFile.writeAsBytes(bytes!.buffer.asUint8List());
+    return newFile;
   }
 
   @override
@@ -97,14 +132,7 @@ class _CameraViewState extends State<CameraView> {
                     Image.file(widget.file, fit: BoxFit.cover),
                     CustomPaint(painter: _DrawingPainter(points)),
                     ...texts.map(
-                      (t) => Positioned(
-                        left: t.offset.dx,
-                        top: t.offset.dy,
-                        child: Text(
-                          t.text,
-                          style: TextStyle(color: t.color, fontSize: t.size),
-                        ),
-                      ),
+                      (t) => _MovableText(t: t),
                     ),
                   ],
                 ),
@@ -112,7 +140,7 @@ class _CameraViewState extends State<CameraView> {
             ),
           ),
 
-          // Crop overlay
+          // Crop overlay (static for now)
           if (showCropOverlay)
             Positioned.fill(
               child: IgnorePointer(
@@ -172,10 +200,7 @@ class _CameraViewState extends State<CameraView> {
                     final emoji = EmojiData.emojis[i];
                     return InkWell(
                       onTap: () {
-                        _captionController.text += emoji;
-                        _captionController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: _captionController.text.length),
-                        );
+                        _addTextOverlay(text: emoji);
                       },
                       child: Center(
                         child: Text(emoji, style: const TextStyle(fontSize: 28)),
@@ -217,13 +242,13 @@ class _CameraViewState extends State<CameraView> {
                     ),
                     FloatingActionButton(
                       backgroundColor: Colors.green,
-                      
                       child: const Icon(Icons.check,color: Colors.white,),
-                      onPressed: () {
+                      onPressed: () async {
+                        final editedFile = await _exportImage();
                         Navigator.pop(
                           context,
                           MediaResult(
-                            file: widget.file,
+                            file: editedFile,
                             isVideo: false,
                             caption: _captionController.text,
                           ),
@@ -273,7 +298,7 @@ class _DrawingPainter extends CustomPainter {
 
 class _TextInfo {
   final String text;
-  final Offset offset;
+  Offset offset; 
   final Color color;
   final double size;
 
@@ -283,4 +308,42 @@ class _TextInfo {
     required this.color,
     required this.size,
   });
+}
+
+class _MovableText extends StatefulWidget {
+  final _TextInfo t;
+  const _MovableText({required this.t});
+
+  @override
+  State<_MovableText> createState() => _MovableTextState();
+}
+
+class _MovableTextState extends State<_MovableText> {
+  late Offset position;
+
+  @override
+  void initState() {
+    super.initState();
+    position = widget.t.offset;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: position.dx,
+      top: position.dy,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            position += details.delta;
+            widget.t.offset = position;
+          });
+        },
+        child: Text(
+          widget.t.text,
+          style: TextStyle(color: widget.t.color, fontSize: widget.t.size),
+        ),
+      ),
+    );
+  }
 }

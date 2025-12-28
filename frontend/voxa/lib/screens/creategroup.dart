@@ -60,7 +60,7 @@ class _CreateGroupState extends State<CreateGroup> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColor.tealGreen, AppColor.lightGreen],
+              colors: [AppColor.dartTealGreen, AppColor.lightGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

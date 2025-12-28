@@ -37,8 +37,8 @@ class HomeScreenState extends State<HomeScreen>
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColor.tealGreen, // deep teal green
-                AppColor.lightGreen, // modern light green
+                AppColor.dartTealGreen,
+                AppColor.lightGreen, 
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -65,7 +65,7 @@ class HomeScreenState extends State<HomeScreen>
                         onPressed: () {},
                       ),
                       PopupMenuButton<String>(
-                        color: AppColor.tealGreen,
+                        color: AppColor.dartTealGreen,
                         icon: const Icon(Icons.more_vert, color: Colors.white),
                         itemBuilder: (BuildContext context) => [
                           PopupMenuItem(

@@ -50,7 +50,7 @@ class _SelectContactState extends State<SelectContact> {
           ),
           const SizedBox(width: 12),
           PopupMenuButton<String>(
-            color: AppColor.tealGreen,
+            color: AppColor.dartTealGreen,
             icon: const Icon(Icons.more_vert, color: Colors.white),
             onSelected: (value) {
               switch (value) {
@@ -94,7 +94,7 @@ class _SelectContactState extends State<SelectContact> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColor.tealGreen, AppColor.lightGreen],
+              colors: [AppColor.dartTealGreen, AppColor.lightGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

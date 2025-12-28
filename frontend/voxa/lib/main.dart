@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voxa/screens/homescreen.dart';
+import 'package:voxa/screens/splashscreen.dart';
+
 
 void main() { //entry point of the main application.
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true 
       ),
 
-      home : const HomeScreen(),
+      home : const SplashScreen(),
   
       
     );
