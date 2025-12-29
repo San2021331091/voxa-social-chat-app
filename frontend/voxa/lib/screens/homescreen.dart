@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:voxa/pages/camerapage.dart';
 import 'package:voxa/pages/chatpage.dart';
 import 'package:voxa/colors/colors.dart';
+import 'package:voxa/screens/calllistscreen.dart';
+import 'package:voxa/screens/creategroup.dart';
+import 'package:voxa/screens/status_screen.dart';
 
 // HomeScreen widget with TabBar and AppBar
 class HomeScreen extends StatefulWidget {
@@ -36,10 +39,7 @@ class HomeScreenState extends State<HomeScreen>
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                AppColor.dartTealGreen,
-                AppColor.lightGreen, 
-              ],
+              colors: [AppColor.dartTealGreen, AppColor.lightGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -74,35 +74,38 @@ class HomeScreenState extends State<HomeScreen>
                               "New Group",
                               style: TextStyle(color: Colors.white),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                     const CreateGroup(),
+                                ),
+                              );
+                            },
                           ),
 
                           PopupMenuItem(
-                            value: "New Broadcast",
+                            value: "New Community",
                             child: const Text(
-                              "New Broadcast",
+                              "New Community",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+
+                         
+                          PopupMenuItem(
+                            value: "My Profile",
+                            child: const Text(
+                              "My profile",
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
 
                           PopupMenuItem(
-                            value: "Voxa Web",
+                            value: "Contacts",
                             child: const Text(
-                              "Voxa Web",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "Starred Messages",
-                            child: const Text(
-                              "Starred Messages",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-
-                          PopupMenuItem(
-                            value: "Settings",
-                            child: const Text(
-                              "Settings",
+                              "Contacts",
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -135,8 +138,8 @@ class HomeScreenState extends State<HomeScreen>
         children: [
           const CameraPage(),
           const ChatPage(),
-          Center(child: Text("Status Screen")),
-          Center(child: Text("Calls Screen")),
+          const StatusScreen(),
+          const CallListScreen(),
         ],
       ),
     );

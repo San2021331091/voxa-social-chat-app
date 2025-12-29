@@ -9,6 +9,8 @@ import 'package:marquee/marquee.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:voxa/screens/videocallscreen.dart';
+import 'package:voxa/screens/voicecallscreen.dart';
 
 class IndividualPage extends StatefulWidget {
   const IndividualPage({super.key, required this.chatModel});
@@ -107,11 +109,21 @@ class _IndividualPageState extends State<IndividualPage> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => VideoCallScreen(callerName: widget.chatModel.name!, callerAvatar: "https://i.pravatar.cc/150?img=1" )
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.videocam, color: Colors.white),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, 
+                        MaterialPageRoute(builder: (_)=> VoiceCallScreen(callerName: widget.chatModel.name!, callerAvatar: "https://i.pravatar.cc/150?img=1")));
+                      },
                       icon: const Icon(Icons.call, color: Colors.white),
                     ),
                     PopupMenuButton<String>(
