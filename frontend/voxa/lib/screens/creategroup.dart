@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
-import 'package:voxa/screens/AddNewGroup.dart';
+import 'package:voxa/pages/addnewgroup.dart';
 
 class CreateGroup extends StatefulWidget {
   const CreateGroup({super.key});
@@ -27,42 +27,21 @@ class _CreateGroupState extends State<CreateGroup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
         leading: const BackButton(color: Colors.white),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "New group",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text("New group",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white)),
             SizedBox(height: 2),
-            Text(
-              "Add participants",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 12,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
+            Text("Add participants",
+                style: TextStyle(fontSize: 12, color: Colors.white70,fontWeight:FontWeight.bold)),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [AppColor.dartTealGreen, AppColor.lightGreen],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
             ),
           ),
         ),
@@ -73,9 +52,13 @@ class _CreateGroupState extends State<CreateGroup> {
               backgroundColor: AppColor.lightGreen,
               onPressed: () {
                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (builder) => const AddNewGroup()),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AddNewGroup(
+                      members: selectedUsers.toList(),
+                    ),
+                  ),
+                );
               },
               child: const Icon(Icons.arrow_forward, color: Colors.white),
             )
@@ -90,11 +73,9 @@ class _CreateGroupState extends State<CreateGroup> {
     );
   }
 
-  // Selected users (top horizontal list)
   Widget _selectedUsersBar() {
-    return Container(
+    return SizedBox(
       height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: selectedUsers.map((name) {
@@ -106,7 +87,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   children: [
                     const CircleAvatar(
                       radius: 24,
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color.fromRGBO(33, 150, 243, 1),
                       child: Icon(Icons.person, color: Colors.white),
                     ),
                     Positioned(
@@ -119,26 +100,19 @@ class _CreateGroupState extends State<CreateGroup> {
                         child: const CircleAvatar(
                           radius: 10,
                           backgroundColor: Colors.red,
-                          child: Icon(
-                            Icons.close,
-                            size: 14,
-                            color: Colors.white,
-                          ),
+                          child:
+                              Icon(Icons.close, size: 14, color: Colors.white),
                         ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(name,
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.deepPurple)),
               ],
             ),
           );
@@ -147,13 +121,12 @@ class _CreateGroupState extends State<CreateGroup> {
     );
   }
 
-  // Contacts list
   Widget _contactsList() {
     return ListView.builder(
       itemCount: contacts.length,
       itemBuilder: (context, index) {
         final contact = contacts[index];
-        final name = contact.name ?? "";
+        final name = contact.name!;
         final isSelected = selectedUsers.contains(name);
 
         return ListTile(
@@ -170,29 +143,26 @@ class _CreateGroupState extends State<CreateGroup> {
                   child: CircleAvatar(
                     radius: 10,
                     backgroundColor: AppColor.lightGreen,
-                    child: Icon(Icons.check, size: 14, color: Colors.white),
+                    child:
+                        Icon(Icons.check, size: 14, color: Colors.white),
                   ),
                 ),
             ],
           ),
-          title: Text(
-            name,
-            style: const TextStyle(
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          subtitle: Text(
-            contact.about ?? "",
-            style: const TextStyle(
-              color: Colors.green,
-              fontWeight: FontWeight.w700,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+          title: Text(name,
+              style: const TextStyle(
+                  color: Colors.deepOrange,
+                  fontWeight: FontWeight.w600)),
+          subtitle: Text(contact.about ?? "",
+              style: const TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic)),
           onTap: () {
             setState(() {
-              isSelected ? selectedUsers.remove(name) : selectedUsers.add(name);
+              isSelected
+                  ? selectedUsers.remove(name)
+                  : selectedUsers.add(name);
             });
           },
         );

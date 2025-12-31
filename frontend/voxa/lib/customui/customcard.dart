@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/pages/groupchatpage.dart';
 import 'package:voxa/pages/individualpage.dart';
 
 class CustomCard extends StatelessWidget {
@@ -15,7 +16,7 @@ class CustomCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => IndividualPage(chatModel: chatModel),
+            builder: (context) =>  chatModel.isGroup! ? GroupChatPage(group: chatModel) : IndividualPage(chatModel: chatModel)
           ),
         );
       },

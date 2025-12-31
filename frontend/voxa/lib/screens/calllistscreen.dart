@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/model/call_model.dart';
+import 'package:voxa/pages/contactpage.dart';
+import 'package:voxa/screens/videocallscreen.dart';
+import 'package:voxa/screens/voicecallscreen.dart';
+
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({super.key});
@@ -49,9 +53,7 @@ class _CallListScreenState extends State<CallListScreen> {
         elevation: 4,
         child: const Icon(Icons.add_call, color: Colors.white),
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Start new call')),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (_) => ContactPage()));
         },
       ),
     );
@@ -131,7 +133,6 @@ class _CallListScreenState extends State<CallListScreen> {
                           ? Icons.videocam
                           : Icons.call,
                       color: Colors.white,
-
                     ),
                     onPressed: () => _startCall(call),
                   ),
@@ -205,11 +206,10 @@ class _CallListScreenState extends State<CallListScreen> {
   void _startCall(CallModel call) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'Starting ${call.media.name} call with ${call.name}',
-        ),
+        content: Text('Starting ${call.media.name} call with ${call.name}'),
       ),
     );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => call.media == CallMedia.audio ? VoiceCallScreen(callerName: call.name, callerAvatar: call.avatar) : VideoCallScreen(callerName: call.name, callerAvatar: call.avatar)));
   }
 
   void _showCallDetails(CallModel call) {
@@ -248,11 +248,18 @@ class _CallListScreenState extends State<CallListScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _actionIcon(Icons.call, () => _startCall(call), Colors.greenAccent),
-                  _actionIcon(Icons.videocam, () => _startCall(call), Colors.orangeAccent),
-                  _actionIcon(Icons.message, () {
+                  _actionIcon(
+                    Icons.call,
+                    () => _startCall(call),
+                    Colors.greenAccent,
+                  ),
+                  _actionIcon(
+                    Icons.videocam,
+                    () => _startCall(call),
+                    Colors.orangeAccent,
+                  ),
 
-                  }, Colors.purpleAccent),
+                 
                 ],
               ),
             ],
@@ -264,10 +271,7 @@ class _CallListScreenState extends State<CallListScreen> {
 
   Widget _actionIcon(IconData icon, VoidCallback onTap, Color bgColor) {
     return Container(
-      decoration: BoxDecoration(
-       
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle),
       child: IconButton(
         icon: Icon(icon, color: bgColor),
         onPressed: onTap,
@@ -276,10 +280,7 @@ class _CallListScreenState extends State<CallListScreen> {
   }
 
   Color _buttonBackground(CallMedia media) {
-    return media == CallMedia.video
-        ? Colors.orangeAccent
-        : Colors.green;
+    return media == CallMedia.video ? Colors.orangeAccent : Colors.green;
   }
-
-  }
+}
 

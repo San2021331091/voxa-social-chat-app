@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voxa/pages/camerapage.dart';
 import 'package:voxa/pages/statusviewer.dart';
 import 'package:voxa/status/statusmodel.dart';
 
@@ -79,9 +80,9 @@ class _StatusScreenState extends State<StatusScreen> {
         ],
       ),
       title: const Text('My status',style: TextStyle(color:Colors.blue,fontWeight: FontWeight.w700)),
-      subtitle: const Text('Tap to add status update',style: TextStyle(color: Colors.pink,fontWeight: FontWeight.bold),),
+      subtitle: const Text('Tap to add status update',style: TextStyle(color: Colors.pink,fontWeight: FontWeight.bold)),
       onTap: () {
-        // Add status
+      Navigator.push(context, MaterialPageRoute(builder: (_)=> const CameraPage()));
       },
     );
   }

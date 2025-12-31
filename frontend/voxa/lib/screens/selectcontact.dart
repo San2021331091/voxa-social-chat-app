@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/pages/createcontactpage.dart';
+import 'package:voxa/screens/createcommunity.dart';
 import 'package:voxa/screens/creategroup.dart';
 
 class SelectContact extends StatefulWidget {
@@ -114,11 +116,15 @@ class _SelectContactState extends State<SelectContact> {
               );
             },
           ),
-          _topTile(icon: Icons.person_add, title: "New contact", onTap: () {}),
+          _topTile(icon: Icons.person_add, title: "New contact", onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateContactPage()));
+          }),
           _topTile(
             icon: Icons.group_add_sharp,
             title: "New Community",
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder:(_)=> const CreateNewCommunity()));
+            },
           ),
           const Divider(),
 

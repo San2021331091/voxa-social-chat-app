@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:voxa/pages/camerapage.dart';
 import 'package:voxa/pages/chatpage.dart';
 import 'package:voxa/colors/colors.dart';
+import 'package:voxa/pages/communitypage.dart';
 import 'package:voxa/screens/calllistscreen.dart';
+import 'package:voxa/screens/createcommunity.dart';
 import 'package:voxa/screens/creategroup.dart';
 import 'package:voxa/screens/status_screen.dart';
 
@@ -91,9 +93,16 @@ class HomeScreenState extends State<HomeScreen>
                               "New Community",
                               style: TextStyle(color: Colors.white),
                             ),
+                              onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                 const CreateNewCommunity()
+                                ),
+                              );
+                            },
                           ),
-
-                         
                           PopupMenuItem(
                             value: "My Profile",
                             child: const Text(
@@ -103,11 +112,20 @@ class HomeScreenState extends State<HomeScreen>
                           ),
 
                           PopupMenuItem(
-                            value: "Contacts",
+                            value: "My communities",
                             child: const Text(
-                              "Contacts",
+                              "My Communities",
                               style: TextStyle(color: Colors.white),
                             ),
+                              onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CommunityPage()
+                                    
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
