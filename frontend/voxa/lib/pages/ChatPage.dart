@@ -11,18 +11,20 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-  List<ChatModel> chats = const [
+  List<ChatModel> chats =  [
     ChatModel(
       name: "Alice",
       isGroup: false,
       currentMessage: "Hey! Are we still on for today?",
-      time: "10:30 AM",
+      time: "10:30 AM", 
+      img: '',
     ),
     ChatModel(
       name: "Study Group",
       isGroup: true,
       currentMessage: "Don't forget to review chapter 5.",
       time: "9:45 AM",
+      img: '',
     ),
 
     ChatModel(
@@ -30,6 +32,7 @@ class ChatPageState extends State<ChatPage> {
       isGroup: true,
       currentMessage: "Hi, everyone.",
       time: "6:56 AM",
+      img: '',
     ),
 
     ChatModel(
@@ -37,6 +40,7 @@ class ChatPageState extends State<ChatPage> {
       isGroup: false,
       currentMessage: "Hello, raz.",
       time: "8:23 AM",
+      img:'',
     ),
 
     ChatModel(
@@ -44,6 +48,7 @@ class ChatPageState extends State<ChatPage> {
       isGroup: false,
       currentMessage: "Hey.",
       time: "7:09 AM",
+      img:'',
     ),
   ];
   @override

@@ -9,12 +9,15 @@ import 'package:marquee/marquee.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:voxa/screens/userprofilescreen.dart';
 import 'package:voxa/screens/videocallscreen.dart';
 import 'package:voxa/screens/voicecallscreen.dart';
 
 class IndividualPage extends StatefulWidget {
   const IndividualPage({super.key, required this.chatModel});
   final ChatModel chatModel;
+
+  
 
   @override
   State<IndividualPage> createState() => _IndividualPageState();
@@ -78,7 +81,7 @@ class _IndividualPageState extends State<IndividualPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.chatModel.name!,
+                        widget.chatModel.name,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18.5,
@@ -110,10 +113,13 @@ class _IndividualPageState extends State<IndividualPage> {
                   children: [
                     IconButton(
                       onPressed: () {
-                         Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => VideoCallScreen(callerName: widget.chatModel.name!, callerAvatar: "https://i.pravatar.cc/150?img=1" )
+                            builder: (_) => VideoCallScreen(
+                              callerName: widget.chatModel.name,
+                              callerAvatar: "https://i.pravatar.cc/150?img=1",
+                            ),
                           ),
                         );
                       },
@@ -121,15 +127,42 @@ class _IndividualPageState extends State<IndividualPage> {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(context, 
-                        MaterialPageRoute(builder: (_)=> VoiceCallScreen(callerName: widget.chatModel.name!, callerAvatar: "https://i.pravatar.cc/150?img=1")));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => VoiceCallScreen(
+                              callerName: widget.chatModel.name,
+                              callerAvatar: "https://i.pravatar.cc/150?img=1",
+                            ),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.call, color: Colors.white),
                     ),
                     PopupMenuButton<String>(
                       color: AppColor.dartTealGreen,
                       icon: const Icon(Icons.more_vert, color: Colors.white),
-                      onSelected: (value) {},
+                      onSelected: (value) {
+                        switch (value) {
+                          case "View Contact":
+                            {}
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => UserProfileScreen(
+                                  name: widget.chatModel.name,
+                                  status: "Hey there! I am using Voxa",
+                                  lastSeen: "Last seen today at 12:00 PM",
+                                  phone: "+880 1234 567890",
+                                  imageUrl: "https://i.pravatar.cc/150?img=1",
+                                ),
+                              ),
+                            );
+
+                            break;
+                          default:
+                        }
+                      },
                       itemBuilder: (BuildContext context) {
                         return [
                           const PopupMenuItem(

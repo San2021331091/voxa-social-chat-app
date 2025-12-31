@@ -51,7 +51,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
           CircleAvatar(
             radius: 20,
             backgroundImage: NetworkImage(
-              widget.group.img ?? "https://i.pravatar.cc/150?img=10",
+          "https://i.pravatar.cc/150?img=10",
             ),
           ),
           const SizedBox(width: 10),
@@ -59,7 +59,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.group.name ?? "Group",
+                widget.group.name ,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -81,7 +81,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
               context,
               MaterialPageRoute(
                 builder: (_) => VideoCallScreen(
-                  callerName: widget.group.name!,
+                  callerName: widget.group.name,
                   callerAvatar: "https://i.pravatar.cc/150?img=1",
                 ),
               ),
@@ -95,7 +95,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
               context,
               MaterialPageRoute(
                 builder: (_) => VoiceCallScreen(
-                  callerName: widget.group.name!,
+                  callerName: widget.group.name,
                   callerAvatar: "https://i.pravatar.cc/150?img=1",
                 ),
               ),

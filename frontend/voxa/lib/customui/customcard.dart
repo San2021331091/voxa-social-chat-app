@@ -39,7 +39,7 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               title: Text(
-                chatModel.name!,
+                chatModel.name,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,

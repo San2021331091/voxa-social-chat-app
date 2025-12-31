@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/colors/colors.dart';
 import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/pages/contactpage.dart';
 import 'package:voxa/pages/createcontactpage.dart';
 import 'package:voxa/screens/createcommunity.dart';
 import 'package:voxa/screens/creategroup.dart';
@@ -14,10 +15,10 @@ class SelectContact extends StatefulWidget {
 
 class _SelectContactState extends State<SelectContact> {
   final List<ChatModel> contacts = const [
-    ChatModel(name: "Dev Stack", about: "Hi Everyone"),
-    ChatModel(name: "Kishor Kumar", about: "Hi Kishor"),
-    ChatModel(name: "Dev Server Chat", about: "Hi Everyone on this group"),
-    ChatModel(name: "Collins", about: "Hi Dev Stack"),
+    ChatModel(name: "Dev Stack", about: "Hi Everyone", img: ''),
+    ChatModel(name: "Kishor Kumar", about: "Hi Kishor", img: ''),
+    ChatModel(name: "Dev Server Chat", about: "Hi Everyone on this group", img: ''),
+    ChatModel(name: "Collins", about: "Hi Dev Stack", img: ''),
   ];
 
   @override
@@ -60,7 +61,9 @@ class _SelectContactState extends State<SelectContact> {
                   print('Invite a friend');
                   break;
                 case 'contacts':
-                  print('Contacts');
+                {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ContactPage()));
+                }
                   break;
                 case 'refresh':
                   print('Refresh');
@@ -129,7 +132,7 @@ class _SelectContactState extends State<SelectContact> {
           const Divider(),
 
           ...contacts.map(
-            (c) => _contactTile(name: c.name ?? "", subtitle: c.about ?? ""),
+            (c) => _contactTile(name: c.name , subtitle: c.about ?? ""),
           ),
         ],
       ),

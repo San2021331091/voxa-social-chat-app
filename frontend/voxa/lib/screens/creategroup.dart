@@ -12,13 +12,13 @@ class CreateGroup extends StatefulWidget {
 
 class _CreateGroupState extends State<CreateGroup> {
   final List<ChatModel> contacts = const [
-    ChatModel(name: "Balram", about: "Flutter Developer"),
-    ChatModel(name: "Saket", about: "Web developer"),
-    ChatModel(name: "Bhanu Dev", about: "App developer"),
-    ChatModel(name: "Collins", about: "React developer"),
-    ChatModel(name: "Kishor", about: "Full Stack Web"),
-    ChatModel(name: "Divyanshu", about: "Love to code"),
-    ChatModel(name: "Helper", about: "Love you Mom Dad"),
+    ChatModel(name: "Balram", about: "Flutter Developer", img: ''),
+    ChatModel(name: "Saket", about: "Web developer", img: ''),
+    ChatModel(name: "Bhanu Dev", about: "App developer", img: ''),
+    ChatModel(name: "Collins", about: "React developer", img: ''),
+    ChatModel(name: "Kishor", about: "Full Stack Web", img: ''),
+    ChatModel(name: "Divyanshu", about: "Love to code", img: ''),
+    ChatModel(name: "Helper", about: "Love you Mom Dad", img: ''),
   ];
 
   final Set<String> selectedUsers = {};
@@ -126,7 +126,7 @@ class _CreateGroupState extends State<CreateGroup> {
       itemCount: contacts.length,
       itemBuilder: (context, index) {
         final contact = contacts[index];
-        final name = contact.name!;
+        final name = contact.name;
         final isSelected = selectedUsers.contains(name);
 
         return ListTile(

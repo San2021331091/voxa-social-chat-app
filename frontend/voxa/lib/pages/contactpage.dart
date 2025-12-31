@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:voxa/model/chatmodel.dart';
+import 'package:voxa/pages/individualpage.dart';
+import 'package:voxa/screens/videocallscreen.dart';
+import 'package:voxa/screens/voicecallscreen.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -23,7 +27,8 @@ class _ContactPageState extends State<ContactPage> {
 
   Future<void> _fetchContacts() async {
     if (!await FlutterContacts.requestPermission()) return;
-    final allContacts = await FlutterContacts.getContacts(withProperties: true, withPhoto: true);
+    final allContacts =
+        await FlutterContacts.getContacts(withProperties: true, withPhoto: true);
     setState(() {
       contacts = allContacts;
       filteredContacts = allContacts;
@@ -53,8 +58,31 @@ class _ContactPageState extends State<ContactPage> {
           : const CircleAvatar(child: Icon(Icons.person)),
       title: Text(contact.displayName),
       subtitle: contact.phones.isNotEmpty ? Text(contact.phones.first.number) : null,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min, 
+        children: [
+          IconButton(
+            icon: const Icon(Icons.message, color: Colors.green),
+            onPressed: () {
+             ChatModel chat = ChatModel(name: contact.displayName,img: "assets/person.svg",isGroup: false);
+             Navigator.push(context, MaterialPageRoute(builder: (_)=> IndividualPage(chatModel: chat)));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.call, color: Colors.blue),
+            onPressed: () {
+              Navigator.push(context,MaterialPageRoute(builder: (_)=> VoiceCallScreen(callerName: contact.displayName, callerAvatar: "https://i.pravatar.cc/150?img=1")));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.videocam, color: Colors.purple),
+            onPressed: () {
+                 Navigator.push(context,MaterialPageRoute(builder: (_)=> VideoCallScreen(callerName: contact.displayName, callerAvatar: "https://i.pravatar.cc/150?img=1")));
+            },
+          ),
+        ],
+      ),
       onTap: () {
-        // Handle contact selection
         print("Selected: ${contact.displayName}");
       },
     );

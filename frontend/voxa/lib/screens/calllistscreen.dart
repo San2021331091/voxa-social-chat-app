@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/model/call_model.dart';
+import 'package:voxa/model/chatmodel.dart';
 import 'package:voxa/pages/contactpage.dart';
+import 'package:voxa/pages/individualpage.dart';
 import 'package:voxa/screens/videocallscreen.dart';
 import 'package:voxa/screens/voicecallscreen.dart';
-
 
 class CallListScreen extends StatefulWidget {
   const CallListScreen({super.key});
@@ -53,7 +54,10 @@ class _CallListScreenState extends State<CallListScreen> {
         elevation: 4,
         child: const Icon(Icons.add_call, color: Colors.white),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => ContactPage()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => ContactPage()),
+          );
         },
       ),
     );
@@ -209,7 +213,14 @@ class _CallListScreenState extends State<CallListScreen> {
         content: Text('Starting ${call.media.name} call with ${call.name}'),
       ),
     );
-    Navigator.push(context, MaterialPageRoute(builder: (_) => call.media == CallMedia.audio ? VoiceCallScreen(callerName: call.name, callerAvatar: call.avatar) : VideoCallScreen(callerName: call.name, callerAvatar: call.avatar)));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => call.media == CallMedia.audio
+            ? VoiceCallScreen(callerName: call.name, callerAvatar: call.avatar)
+            : VideoCallScreen(callerName: call.name, callerAvatar: call.avatar),
+      ),
+    );
   }
 
   void _showCallDetails(CallModel call) {
@@ -259,7 +270,22 @@ class _CallListScreenState extends State<CallListScreen> {
                     Colors.orangeAccent,
                   ),
 
-                 
+                  IconButton(
+                    icon: const Icon(Icons.message, color: Colors.green),
+                    onPressed: () {
+                      ChatModel chat = ChatModel(
+                        name: call.name,
+                        img: "assets/person.svg",
+                        isGroup: false,
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => IndividualPage(chatModel: chat),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
@@ -283,4 +309,3 @@ class _CallListScreenState extends State<CallListScreen> {
     return media == CallMedia.video ? Colors.orangeAccent : Colors.green;
   }
 }
-

@@ -116,8 +116,8 @@ class _CommunityPageState extends State<CommunityPage> {
           ...communities.map(
             (community) {
               final chatModel = ChatModel(
-                name: community["name"],
-                img: community["img"],
+                name: community["name"]!,
+                img: community["img"]!,
                 isGroup: true,
                 isCommunity: true,
                 about: community["description"],

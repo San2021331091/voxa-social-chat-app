@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:voxa/colors/colors.dart';
 
 class CreateContactPage extends StatefulWidget {
@@ -12,6 +15,99 @@ class _CreateContactPageState extends State<CreateContactPage> {
   final TextEditingController _firstName = TextEditingController();
   final TextEditingController _lastName = TextEditingController();
   final TextEditingController _phone = TextEditingController();
+
+  final ImagePicker _picker = ImagePicker();
+  File? _profileImage;
+
+  /// Open Camera
+  Future<void> _openCamera() async {
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() => _profileImage = File(image.path));
+    }
+  }
+
+  /// Open Gallery
+  Future<void> _openGallery() async {
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() => _profileImage = File(image.path));
+    }
+  }
+
+  /// Image Source Popup
+  void _showImageSourcePopup() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Select Image Source",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _imageSourceItem(
+                    icon: Icons.camera_alt,
+                    label: "Camera",
+                    onTap: () {
+                      Navigator.pop(context);
+                      _openCamera();
+                    },
+                  ),
+                  _imageSourceItem(
+                    icon: Icons.photo,
+                    label: "Gallery",
+                    onTap: () {
+                      Navigator.pop(context);
+                      _openGallery();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _imageSourceItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(50),
+          child: CircleAvatar(
+            radius: 28,
+            backgroundColor: AppColor.dartTealGreen,
+            child: Icon(icon, color: Colors.white),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(label),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,25 +157,33 @@ class _CreateContactPageState extends State<CreateContactPage> {
             Center(
               child: Stack(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.pink,
-                    child: Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : null,
+                    child: _profileImage == null
+                        ? const Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundColor: AppColor.lightGreen,
-                      child: const Icon(
-                        Icons.camera_alt,
-                        size: 18,
-                        color: Colors.white,
+                    child: GestureDetector(
+                      onTap: _showImageSourcePopup,
+                      child: CircleAvatar(
+                        radius: 16,
+                        backgroundColor: AppColor.lightGreen,
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -120,7 +224,6 @@ class _CreateContactPageState extends State<CreateContactPage> {
 
             const SizedBox(height: 40),
 
-            /// Info text
             const Text(
               "This contact will be saved to your device",
               style: TextStyle(

@@ -6,6 +6,8 @@ import 'package:voxa/pages/communitypage.dart';
 import 'package:voxa/screens/calllistscreen.dart';
 import 'package:voxa/screens/createcommunity.dart';
 import 'package:voxa/screens/creategroup.dart';
+import 'package:voxa/screens/myprofilescreen.dart';
+import 'package:voxa/screens/searchscreen.dart';
 import 'package:voxa/screens/status_screen.dart';
 
 // HomeScreen widget with TabBar and AppBar
@@ -64,7 +66,9 @@ class HomeScreenState extends State<HomeScreen>
                     children: [
                       IconButton(
                         icon: const Icon(Icons.search, color: Colors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                        },
                       ),
                       PopupMenuButton<String>(
                         color: AppColor.dartTealGreen,
@@ -80,8 +84,7 @@ class HomeScreenState extends State<HomeScreen>
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                     const CreateGroup(),
+                                  builder: (_) => const CreateGroup(),
                                 ),
                               );
                             },
@@ -93,12 +96,11 @@ class HomeScreenState extends State<HomeScreen>
                               "New Community",
                               style: TextStyle(color: Colors.white),
                             ),
-                              onTap: () {
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                 const CreateNewCommunity()
+                                  builder: (_) => const CreateNewCommunity(),
                                 ),
                               );
                             },
@@ -109,6 +111,14 @@ class HomeScreenState extends State<HomeScreen>
                               "My profile",
                               style: TextStyle(color: Colors.white),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MyProfileScreen()
+                                ),
+                              );
+                            },
                           ),
 
                           PopupMenuItem(
@@ -117,12 +127,11 @@ class HomeScreenState extends State<HomeScreen>
                               "My Communities",
                               style: TextStyle(color: Colors.white),
                             ),
-                              onTap: () {
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const CommunityPage()
-                                    
+                                  builder: (_) => const CommunityPage(),
                                 ),
                               );
                             },
