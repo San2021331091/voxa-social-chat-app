@@ -16,14 +16,6 @@ Voxa is a modern **video calling app** built using **Flutter** and **Fiber**. It
 - Smooth **UI animations** with marquee text support.
 - Persistent data storage with **Shared Preferences**.
 
----
-
-## Screenshots
-
-_Add screenshots of your app here to showcase its UI and features._
-
----
-
 ## Getting Started
 
 ### Prerequisites
@@ -37,7 +29,7 @@ _Add screenshots of your app here to showcase its UI and features._
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/voxa.git
+   git clone https://github.com/username/voxa.git
 ````
 
 2. Navigate to the project directory:
