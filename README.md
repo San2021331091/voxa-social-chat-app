@@ -25,30 +25,6 @@ Voxa is a modern **video calling app** built using **Flutter** and **Fiber**. It
 - Android Studio or Xcode for mobile development
 - Physical device or emulator for testing
 
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/username/voxa.git
-````
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd voxa
-   ```
-3. Install dependencies:
-
-   ```bash
-   flutter pub get
-   ```
-4. Run the app:
-
-   ```bash
-   flutter run
-   ```
-
----
 
 ## Dependencies
 
