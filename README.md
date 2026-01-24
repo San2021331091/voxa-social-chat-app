@@ -54,11 +54,6 @@ Contributions are welcome! Feel free to submit a pull request or open an issue.
 
 ---
 
-## License
-
-This project is private and not published to **pub.dev**. Use according to your organization or personal policies.
-
----
 
 
 
