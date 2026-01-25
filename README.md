@@ -1,6 +1,6 @@
 # Voxa
 
-Voxa is a modern **video calling app** built using **Flutter** and **Fiber**. It aims to provide seamless video communication with a simple and intuitive interface.
+Voxa is a modern **calling app** built using **Flutter** and **Fiber**. It aims to provide seamless video communication with a simple and intuitive interface.
 
 ---
 
